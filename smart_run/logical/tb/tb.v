@@ -238,7 +238,8 @@ begin
         $dumpfile("test.vcd");
         $dumpvars;  
      `else
-        $fsdbDumpvars();
+        $fsdbDumpfile("opene902.fsdb");
+        $fsdbDumpvars(0, tb);
      `endif
   `endif
 end

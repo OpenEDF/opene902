@@ -30,11 +30,22 @@ SIM_DUMP = -DNO_DUMP
 else
 SIM_DUMP := +define+NO_DUMP
 endif
+ifeq (${SIM}, vcs)
+SIM_DUMP := -P $(VERDI_HOME)/share/PLI/VCS/LINUX64/novas.tab \
+            $(VERDI_HOME)/share/PLI/VCS/LINUX64/pli.a -load libnovas.so:FSDBDumpCmd
+else
+SIM_DUMP :=
+endif
 endif
 
 ifeq ($(SIM), vcs)
 TIMESCALE := -timescale=1ns/100fs
-SIMULATOR_OPT := -sverilog -full64 -kdb -lca -debug_access +nospecify +notimingchecks
+SIMULATOR_OPT := -sverilog -full64 -kdb -lca -debug_access \
+                 +nospecify +notimingchecks +lint=TFIPC-L  \
+                 -debug_access+all -debug_acc=dumptf -debug_region+cell+encrypt \
+                 -cpp g++-4.8 -cc gcc-4.8 -LDFLAGS -Wl,--no-as-needed \
+                 -Mupdate
+
 SIMULATOR_DEF := +define+no_warning +define+TSMC_NO_WARNING
 SIMULATOR_LOG := -l comp.vcs.log
 else 
@@ -58,6 +69,9 @@ SIM_FILELIST := $(SIM_FILELIST) -f ${CODE_BASE_PATH}/gen_rtl/filelists/E902_asic
 else
 SIM_FILELIST := $(SIM_FILELIST) -f ../logical/filelists/sim.fl
 endif
+
+VERDI_SIM_FILE = -f ../logical/filelists/sim.fl
+
 compile:
 	@echo "  [THead-smart] Compiling smart now ... "
 	@echo "  [THead-smart] SIM = $(SIM)"
@@ -78,6 +92,9 @@ endif
 
 cleansim:
 	@cd ./work && rm -rf simv* csrc ucli.key *.vcs.log novas_dump.log *.fsdb
+
+wavedebug:
+	@cd ./work && verdi -sv $(VERDI_SIM_FILE) -top tb -ssf opene902.fsdb -nologo
 
 ################################################################################
 # Cases related
@@ -103,7 +120,6 @@ else
         $(newline)   The list of valid cases can be obtained by executing: \
         $(newline)   > make showcase ...)
 endif
-
 
 cleancase:
 	@cd ./work && rm -rf *.s *.S *.c *.o *.pat *.h *.lcf *.hex *.obj *.vh *.v *.report *.elf Makefile *.case.log
@@ -178,5 +194,3 @@ help:
 	@echo "    make runcase CASE=dhry          : run case 'dhry' (by iverilog withtout dump) "; 
 	@echo "    make runcase CASE=dhry SIM=nc   : run case 'dhry' (by nc withtout dump) "; 
 	@echo "    make runcase CASE=dhry DUMP=on  : run case 'dhry' with dump "; 
-
-
