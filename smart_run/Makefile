@@ -94,7 +94,7 @@ cleansim:
 	@cd ./work && rm -rf simv* csrc ucli.key *.vcs.log novas_dump.log *.fsdb
 
 wavedebug:
-	@cd ./work && verdi -sv $(VERDI_SIM_FILE) -top tb -ssf opene902.fsdb -nologo
+	@cd ./work && verdi -sv $(VERDI_SIM_FILE) -top tb -ssf opene902.fsdb -nologo &
 
 ################################################################################
 # Cases related

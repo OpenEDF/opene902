@@ -86,4 +86,3 @@ ${CODE_BASE_PATH}/gen_rtl/tcipif/rtl/cr_tcipif_behavior_bus.v
 ${CODE_BASE_PATH}/gen_rtl/tcipif/rtl/cr_tcipif_dummy_bus.v
 ${CODE_BASE_PATH}/gen_rtl/tcipif/rtl/cr_tcipif_top.v
 ${CODE_BASE_PATH}/gen_rtl/clk/rtl/gated_clk_cell.v
-${CODE_BASE_PATH}/gen_rtl
